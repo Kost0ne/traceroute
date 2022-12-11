@@ -2,17 +2,17 @@
 import sys
 
 import ipwhois
-from scapy.layers.inet import TCP, UDP, ICMP, IP
-from scapy.layers.inet6 import IPv6, ICMPv6EchoRequest
-from scapy.volatile import RandShort
-from scapy.sendrecv import sr1
 from scapy.config import conf
+from scapy.layers.inet import ICMP, IP, TCP, UDP
+from scapy.layers.inet6 import ICMPv6EchoRequest, IPv6
+from scapy.sendrecv import sr1
 from scapy.supersocket import L3RawSocket
+from scapy.volatile import RandShort
 
 from arg_parser import get_parser
+from utils import is_ipv6
 from validators import validate_args
 from whois import Whois
-from utils import is_ipv6
 
 
 class Traceroute:

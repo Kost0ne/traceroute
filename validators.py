@@ -1,4 +1,5 @@
 from ipaddress import ip_address
+
 from enums import Error
 
 
