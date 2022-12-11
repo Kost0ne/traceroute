@@ -6,6 +6,8 @@ from scapy.layers.inet import TCP, UDP, ICMP, IP
 from scapy.layers.inet6 import IPv6, ICMPv6EchoRequest
 from scapy.volatile import RandShort
 from scapy.sendrecv import sr1
+from scapy.config import conf
+from scapy.supersocket import L3RawSocket
 
 from arg_parser import get_parser
 from validators import validate_args
@@ -26,6 +28,7 @@ class Traceroute:
         self.timeout = timeout
         self.max_ttl = max_ttl
         self.verbose = verbose
+        conf.L3socket = L3RawSocket
 
     def __get_icmp_packet(self, ttl: int) -> ICMP:
         if is_ipv6(self.ip_address):
