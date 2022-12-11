@@ -30,8 +30,7 @@ class Traceroute:
     def __get_icmp_packet(self, ttl: int) -> ICMP:
         if is_ipv6(self.ip_address):
             return IPv6(dst=self.ip_address,
-                        hlim=ttl,
-                        id=RandShort()) / ICMPv6EchoRequest()
+                        hlim=ttl) / ICMPv6EchoRequest()
 
         return IP(dst=self.ip_address,
                   ttl=ttl,
@@ -40,8 +39,7 @@ class Traceroute:
     def __get_tcp_packet(self, ttl: int) -> TCP:
         if is_ipv6(self.ip_address):
             packet = IPv6(dst=self.ip_address,
-                          hlim=ttl,
-                          id=RandShort()) / TCP()
+                          hlim=ttl) / TCP()
         else:
             packet = IP(dst=self.ip_address,
                         ttl=ttl,
@@ -55,8 +53,7 @@ class Traceroute:
     def __get_udp_packet(self, ttl: int) -> UDP:
         if is_ipv6(self.ip_address):
             packet = IPv6(dst=self.ip_address,
-                          hlim=ttl,
-                          id=RandShort()) / UDP()
+                          hlim=ttl) / UDP()
         else:
             packet = IP(dst=self.ip_address,
                         ttl=ttl,
