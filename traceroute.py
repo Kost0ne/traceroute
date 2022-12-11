@@ -2,14 +2,15 @@
 import sys
 
 import ipwhois
-from scapy.layers.inet import TCP, UDP, IP, ICMP
-from scapy.packet import Packet
+from scapy.layers.inet import TCP, UDP, ICMP, IP
+from scapy.layers.inet6 import IPv6, ICMPv6EchoRequest
 from scapy.volatile import RandShort
 from scapy.sendrecv import sr1
 
 from arg_parser import get_parser
 from validators import validate_args
 from whois import Whois
+from utils import is_ipv6
 
 
 class Traceroute:
@@ -27,27 +28,40 @@ class Traceroute:
         self.verbose = verbose
 
     def __get_icmp_packet(self, ttl: int) -> ICMP:
-        packet = IP(dst=self.ip_address,
-                    ttl=ttl,
-                    id=RandShort()) / ICMP()
-        if self.port:
-            packet.dport = self.port
+        if is_ipv6(self.ip_address):
+            return IPv6(dst=self.ip_address,
+                        hlim=ttl,
+                        id=RandShort()) / ICMPv6EchoRequest()
 
-        return packet
+        return IP(dst=self.ip_address,
+                  ttl=ttl,
+                  id=RandShort()) / ICMP()
 
     def __get_tcp_packet(self, ttl: int) -> TCP:
-        packet = IP(dst=self.ip_address,
-                    ttl=ttl,
-                    id=RandShort()) / TCP()
+        if is_ipv6(self.ip_address):
+            packet = IPv6(dst=self.ip_address,
+                          hlim=ttl,
+                          id=RandShort()) / TCP()
+        else:
+            packet = IP(dst=self.ip_address,
+                        ttl=ttl,
+                        id=RandShort()) / TCP()
+
         if self.port:
             packet.dport = self.port
 
         return packet
 
     def __get_udp_packet(self, ttl: int) -> UDP:
-        packet = IP(dst=self.ip_address,
-                    ttl=ttl,
-                    id=RandShort()) / UDP()
+        if is_ipv6(self.ip_address):
+            packet = IPv6(dst=self.ip_address,
+                          hlim=ttl,
+                          id=RandShort()) / UDP()
+        else:
+            packet = IP(dst=self.ip_address,
+                        ttl=ttl,
+                        id=RandShort()) / UDP()
+
         if self.port:
             packet.dport = self.port
 
